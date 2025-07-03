@@ -1,0 +1,90 @@
+[
+	{
+		"key": "alt+q",
+		"command": "editor.action.commentLine",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "ctrl+oem_2",
+		"command": "-editor.action.commentLine",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "alt+w",
+		"command": "editor.action.moveLinesUpAction",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "alt+up",
+		"command": "-editor.action.moveLinesUpAction",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "alt+s",
+		"command": "editor.action.moveLinesDownAction",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "alt+down",
+		"command": "-editor.action.moveLinesDownAction",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "shift+alt+q",
+		"command": "editor.action.blockComment",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "shift+alt+a",
+		"command": "-editor.action.blockComment",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "shift+alt+1",
+		"command": "editor.action.insertSnippet",
+		"when": "editorTextFocus",
+		"args": {
+			"snippet": "#include <stdio.h>\nint\tmain(void)\n{\n\tprintf(\"%d\", );\n}$0"
+		}
+	},
+	{
+		"key": "alt+w",
+		"command": "-toggleFindWholeWord",
+		"when": "editorFocus"
+	},
+	{
+		"key": "alt+w",
+		"command": "-toggleSearchWholeWord",
+		"when": "searchViewletFocus"
+	},
+	{
+		"key": "shift+alt+s",
+		"command": "editor.action.copyLinesDownAction",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "shift+alt+down",
+		"command": "-editor.action.copyLinesDownAction",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "shift+alt+w",
+		"command": "editor.action.copyLinesUpAction",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "shift+alt+up",
+		"command": "-editor.action.copyLinesUpAction",
+		"when": "editorTextFocus && !editorReadonly"
+	},
+	{
+		"key": "ctrl+c",
+		"command": "editor.action.clipboardCopyAction",
+		"when": "editorTextFocus || terminalFocus"
+	},
+	{
+		"key": "ctrl+v",
+		"command": "editor.action.clipboardPasteAction",
+		"when": "editorTextFocus || terminalFocus"
+	}
+]

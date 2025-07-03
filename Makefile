@@ -9,7 +9,7 @@ LIBS =
 SRCS = main.c
 
 # Flags --------------------------------------- #
-CC = gcc-13
+CC = cc
 CFLAGS = -Wall -Wextra $(addprefix -I,$(INC_PATH)) -flto=auto -fstrict-aliasing
 DEBUG = -g -Wpedantic -Wcast-qual -Wfloat-equal -Wswitch-default -Wduplicated-branches -Wduplicated-cond 
 SANITIZERS = -fsanitize=address,undefined,leak -fno-omit-frame-pointer
@@ -28,7 +28,7 @@ $(NAME): $(OBJS)
 # Phonies ------------------------------------- #
 all: $(NAME)
 
-debug: CFLAGS += $(DEBUG) $(SANITIZERS)
+debug: CFLAGS += $(DEBUG)
 debug: clean $(NAME)
 
 fast: CFLAGS += $(FAST)

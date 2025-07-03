@@ -1,0 +1,44 @@
+{
+    "explorer.compactFolders": false,
+    "diffEditor.ignoreTrimWhitespace": false,
+    "42header.username": "adeimlin",
+    "42header.email": "adeimlin@student.42porto.com",
+    "editor.insertSpaces": false,
+	"editor.detectIndentation": false,
+	"git.enableSmartCommit": true,
+	"git.confirmSync": false,
+	// "github.copilot.editor.enableAutoCompletions": false,
+	"workbench.iconTheme": "material-icon-theme",
+	"explorer.confirmDragAndDrop": false,
+	"github.copilot.advanced": {"authPermissions": "minimal"},
+	"explorer.confirmDelete": false,
+	"editor.minimap.enabled": false,
+	"editor.inlineSuggest.enabled": false,
+	"editor.tokenColorCustomizations":
+	{
+    	"comments": "#4fb44f",
+		"textMateRules":
+		[
+			{
+				// "scope": "keyword.control",
+				// "settings": {
+				// 	"foreground": "#00FF00"
+				// }
+			}
+		]
+	},
+	"workbench.colorCustomizations":
+	{
+    	// "foreground": "#d6d6d6"
+	},
+	"github.copilot.chat.agent.runTasks": false,
+	"github.copilot.editor.enableCodeActions": false,
+	"github.copilot.chat.codeGeneration.useInstructionFiles": false,
+	"workbench.activityBar.location": "top",
+	"explorer.confirmPasteNative": false,
+	"debug.autoExpandLazyVariables": "on",
+	"terminal.integrated.enableMultiLinePasteWarning": "never",
+	"git.openRepositoryInParentFolders": "never",
+	"C_Cpp.copilotHover": "disabled",
+	"workbench.colorTheme": "Visual Studio Dark - C++",
+}

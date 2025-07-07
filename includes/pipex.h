@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 11:34:28 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/01 16:01:21 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/07 17:17:10 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,4 +20,9 @@
 # include <stdlib.h>
 # include <stdio.h>
 # include <sys/wait.h>
+
+void	*ft_memcpy(void *dst_void, const void *src_void, size_t length);
+void	*ft_bzero(void *dst_void, size_t length);
+void	*ft_memset(void *dst_void, const uint8_t byte, size_t length);
+
 #endif

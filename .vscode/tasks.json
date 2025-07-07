@@ -4,13 +4,9 @@
     {
       "label": "build",
       "type": "shell",
-      "command": "make debug",
-      "args": [],
-      "group": {
-        "kind": "build",
-        "isDefault": true
-      },
-      "problemMatcher": ["$gcc"]
+      "command": "bear",
+      "args": ["--output", "build/compile_commands.json", "--","make", "debug"],
+      "group": { "kind": "build", "isDefault": true },
     }
   ]
 }

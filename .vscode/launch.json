@@ -2,25 +2,16 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Debug Executable",
-      "type": "cppdbg",
+      "name": "Debug Executable (LLDB)",
+      "type": "lldb",
       "request": "launch",
-      "program": "${workspaceFolder}/main",
-      "args": [],
-      "stopAtEntry": false,
+      "program": "${workspaceFolder}/build/pipex",
       "cwd": "${workspaceFolder}",
-      "environment": [{ "name": "LSAN_OPTIONS", "value": "detect_leaks=0"}],
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "setupCommands": [
-        {
-          "description": "Enable pretty-printing for gdb",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
-        }
-      ],
-      "preLaunchTask": "build",
-      "miDebuggerPath": "/usr/bin/gdb"
+	  "console": "integratedTerminal",
+      "args": ["ls -l"],
+      "env": { "LSAN_OPTIONS": "detect_leaks=0" },
+      "stopOnEntry": false,
+      "preLaunchTask": "build"
     }
   ]
 }

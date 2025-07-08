@@ -6,10 +6,11 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 11:23:48 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/07 17:01:07 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/08 12:42:18 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <linux/limits.h>
 #include <stdint.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -17,9 +18,6 @@
 #include <fcntl.h>
 #include <stdio.h>
 #include "pipex.h"
-
-#define PATH_MAX 4096
-#define ARG_MAX 4096
 
 static const
 char	*find_path(char **envp, const char *default_path)
@@ -37,7 +35,6 @@ char	*find_path(char **envp, const char *default_path)
 		return (*envp + 5);
 }
 
-// See if I need to worry about not splitting inside ""
 static
 void	in_place_split(char *str, char **buffer)
 {
@@ -45,7 +42,7 @@ void	in_place_split(char *str, char **buffer)
 	size_t	j;
 
 	i = 0;
-	while (*str != 0 && i < (ARG_MAX - 1))
+	while (*str != 0 && i < (FT_ARG_MAX - 1))
 	{
 		while (*str == ' ')
 			str++;
@@ -65,13 +62,16 @@ void	in_place_split(char *str, char **buffer)
 	}
 }
 
-static
-void	exec_cmd(char *cmd, const char *path, char **argv, char **envp)
+// Uses 512kb of stack
+int	pipe_exec(char *cmd, char **envp)
 {
-	char	buffer[PATH_MAX];
-	size_t	i;
-	size_t	j;
+	char 		*argv[FT_ARG_MAX / 2];
+	char		buffer[PATH_MAX];
+	const char	*path = find_path(envp, "/bin:/usr/bin::");
+	size_t		i;
+	size_t		j;
 
+	in_place_split(cmd, argv);
 	while (*path != 0)
 	{
 		i = 0;
@@ -89,19 +89,5 @@ void	exec_cmd(char *cmd, const char *path, char **argv, char **envp)
 		ft_memcpy(buffer + i, cmd, j + 1);
 		execve(buffer, argv, envp);
 	}
-}
-
-// Uses 36kb of stack, but avoids the use of malloc
-int	pipe_exec(char *cmd, char **envp)
-{
-	char 		*buffer[ARG_MAX];
-	const char	*path = find_path(envp, "/bin:/usr/bin::");
-
-	in_place_split(cmd, buffer);
-	exec_cmd(buffer[0], path, buffer, envp);
-}
-
-int main(int argc, char **argv, char **envp)
-{
-	pipe_exec(argv[1], envp);
+	return (1);
 }

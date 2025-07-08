@@ -6,9 +6,9 @@
       "type": "lldb",
       "request": "launch",
       "program": "${workspaceFolder}/build/pipex",
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/build",
 	  "console": "integratedTerminal",
-      "args": ["ls -l"],
+      "args": ["file1.txt", "cat", "wc", "file2.txt"],
       "env": { "LSAN_OPTIONS": "detect_leaks=0" },
       "stopOnEntry": false,
       "preLaunchTask": "build"

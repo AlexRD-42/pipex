@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 11:23:48 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/08 11:22:39 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/10 18:50:25 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,11 +20,18 @@
 
 int main(int argc, char **argv, char **envp)
 {
-	const int	fd_in = open(argv[1], O_RDONLY, 0777);
-	const int	fd_out = open(argv[4], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+	size_t	i;
+	int		input;
+	int		output;
 
-	dup2(fd_in, 0);
-	ft_pipe(argv[2], envp);
-	dup2(fd_out, 1);
-	ft_pipe(argv[3], envp);
+	if (pipex_init(argv, argc, &input, &output) != 0)
+		return (1);
+	i = 2;
+	dup2(input, 0);
+	while (i < (size_t)(argc - 2))
+		ft_pipe(argv[i++], envp);
+	dup2(output, 1);
+	close(output);
+	pipe_exec(argv[argc - 1], envp);
+	return (1);
 }

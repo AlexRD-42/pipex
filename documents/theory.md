@@ -20,6 +20,26 @@ EOF
 '>>' 	Output Redirection: (Appends)
 '&'
 
+// Order is: 
+// fd_input_file is created;
+// the pipe function is called creating an fd_read_end and fd_write_end;
+// A child and parent process is created: the child closes the read_end because it will read from fd_input_file
+// The parent closes the write end, because it will only read from the read_end of the child
+// Parent returns from the ft_pipe function call, and the fd_state is: {fd_read_end, stdout}
+// (if child returns 1, an error has occurred)
+// If I call the pipe function again, what happens is:
+// A new read_end and write_end gets created
+// The child once again closes the read_end, and replaces stdout with write_end, state is: {fd_previous_read_end, fd_current_write_end}
+// Parent closes write_end and replaces stdint with read_end, state is: {fd_current_read_end, stdout}
+
+// TLDR of states:
+// stdin gets initialized to in_file
+// 1st run:	Child: {in_file, 	write_end1}		Parent: {read_end1, 	stdout}
+// 2nd run: Child: {read_end1,	write_end2}		Parent: {read_end2,		stdout}
+// 3rd run: Child: {read_end2,	write_end3}		Parent: {read_end3,		stdout}
+// ...
+// stdout gets duped to out_file
+// Nth run: Child: {read_end(N),	write_end(N+1)}		Parent: {read_end(N+1),		out_file}
 
 ## Useful:
 ### lsof

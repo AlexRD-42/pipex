@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:16:19 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/11 19:17:54 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/11 20:03:28 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,9 +80,9 @@ int	pipex_init(char **argv, int argc, int *input, int *output)
 	else
 		*input = open(argv[1], O_RDONLY, 0644);
 	if (is_here_doc)
-		*output = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0777);
+		*output = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
 	else
-		*output = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
+		*output = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (*output == -1)
 	{
 		close(*input);

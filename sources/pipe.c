@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 10:45:20 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/11 18:57:56 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/11 20:13:59 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,8 @@ int	ft_child(char *cmd, int fd_read, int fd_write, char **envp)
 {
 	int	dup2_error;
 
-	dup2_error = dup2(fd_write, STDOUT_FILENO);
 	close(fd_read);
+	dup2_error = dup2(fd_write, STDOUT_FILENO);
 	close(fd_write);
 	if (dup2_error == -1)
 	{
@@ -45,13 +45,13 @@ int	ft_child(char *cmd, int fd_read, int fd_write, char **envp)
 // State[0]: {fd_read_end(0), stdout}
 // State[1]: {fd_read_end(1), stdout}
 static
-int	ft_parent(int fd_read, int fd_write, pid_t pid)
+int	ft_parent(int fd_read, int fd_write)
 {
 	int	dup2_error;
 
+	close(fd_write);
 	dup2_error = dup2(fd_read, STDIN_FILENO);
 	close(fd_read);
-	close(fd_write);
 	if (dup2_error == -1)
 		perror("dup2");
 	if (dup2_error == -1)
@@ -84,6 +84,6 @@ int	ft_pipe(char *cmd, char **envp, pid_t *cpid)
 	else
 	{
 		*cpid = pid;
-		return (ft_parent(fd[0], fd[1], pid));
+		return (ft_parent(fd[0], fd[1]));
 	}
 }

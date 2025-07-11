@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 11:34:28 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/11 19:00:14 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/11 20:02:10 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,11 +32,11 @@
 # endif
 
 void	*ft_memcpy(void *dst_void, const void *src_void, size_t length);
+void	*ft_memset(void *dst_void, const uint8_t byte, size_t length);
 int32_t	ft_strcmp(const char *str1, const char *str2);
 char	*get_next_line(int fd);
 int		pipe_exec(char *cmd, char **envp);
 int		ft_pipe(char *cmd, char **envp, pid_t *cpid);
 int		pipex_init(char **argv, int argc, int *input, int *output);
-int		here_doc(const char *eof);
 
 #endif

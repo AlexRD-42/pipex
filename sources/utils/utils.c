@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:27:06 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/10 18:29:39 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/11 19:53:01 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,31 @@ void	*ft_memcpy(void *dst_void, const void *src_void, size_t length)
 	while (length > 0)
 	{
 		*dst++ = *src++;
+		length--;
+	}
+	return (dst_void);
+}
+
+void	*ft_memset(void *dst_void, const uint8_t byte, size_t length)
+{
+	uint8_t			*dst;
+	const uintptr_t	word_byte = byte * (0x0101010101010101 & UINTPTR_MAX);
+
+	dst = (uint8_t *) dst_void;
+	while (((uintptr_t)dst & (sizeof(uintptr_t) - 1)) && length > 0)
+	{
+		*dst++ = byte;
+		length--;
+	}
+	while (length >= sizeof(uintptr_t))
+	{
+		*((uintptr_t *)dst) = word_byte;
+		dst += sizeof(uintptr_t);
+		length -= sizeof(uintptr_t);
+	}
+	while (length > 0)
+	{
+		*dst++ = byte;
 		length--;
 	}
 	return (dst_void);

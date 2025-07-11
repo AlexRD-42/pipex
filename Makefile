@@ -3,16 +3,16 @@ NAME = pipex
 BUILD_PATH = build
 INC_PATH = includes
 OBJ_PATH = $(BUILD_PATH)/obj
-BIN = $(BUILD_PATH)/$(NAME)
+BIN = $(NAME)
 VPATH = sources sources/utils
 
 # Files --------------------------------------- #
 LIBS =
-SRCS = exec.c memory.c main.c pipe.c
+SRCS = exec.c main.c pipe.c init.c utils.c get_next_line.c
 OBJS = $(addprefix $(OBJ_PATH)/, $(SRCS:.c=.o))
 
 # Flags --------------------------------------- #
-CC = clang
+CC = cc
 CFLAGS = -Wall -Wextra $(addprefix -I,$(INC_PATH)) -flto -fstrict-aliasing
 LFLAGS =
 DEBUG = -g -Wpedantic -Wcast-qual -Wfloat-equal -Wswitch-default -Wsign-conversion

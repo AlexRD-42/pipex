@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 11:23:48 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/10 17:48:46 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/11 17:52:31 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ char	*find_path(char **envp, const char *default_path)
 {
 	if (envp == NULL)
 		return (default_path);
-	while (*envp != NULL && !((*envp)[0] == 'P' && (*envp)[1] == 'A' 
+	while (*envp != NULL && !((*envp)[0] == 'P' && (*envp)[1] == 'A'
 		&& (*envp)[2] == 'T' && (*envp)[3] == 'H' && (*envp)[4] == '='))
 	{
 		envp++;
@@ -109,7 +109,7 @@ int	exec_cmd(char *cmd, char **argv, char **envp, size_t cmd_length)
 // Uses 512kb of stack
 int	pipe_exec(char *cmd, char **envp)
 {
-	char 			*argv[FT_ARG_MAX / 2];
+	char			*argv[FT_ARG_MAX / 2];
 	size_t			i;
 	const size_t	cmd_length = in_place_split(cmd, argv) + 1;
 	int				error_code;

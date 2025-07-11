@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:16:19 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/11 12:45:27 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/11 14:23:20 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,34 +19,45 @@
 #include "pipex.h"
 
 static
-int	pipex_error(int error_code)
+size_t	ft_strlen(const char *str)
 {
-	
+	size_t	length;
+
+	length = 0;
+	while (str[length] != 0)
+		length++;
+	return (length);
 }
 
-int	pipex_init(char **argv, int argc, int *input, int *output)
+static
+uint8_t	is_eof(const char *str, const char *eof)
 {
-	const uint8_t	is_here_doc = ft_strcmp(argv[1], "here_doc") == 0;
+	while (*str != *eof && *eof != 0)
+	{
+		str++;
+		eof++;
+	}
+	return (*eof == 0 && (*str == 0 || *str == '\n'));
+}
 
-	if (argc <= 4 + is_here_doc)
-		return (pipex_error(1));
-	*output = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
-	if (*output == -1)
+// Child special case
+int	here_doc(const char *eof, int fd_read, int fd_write)
+{
+	int		fd[2];
+	char	*line;
+
+	line = get_next_line(STDIN_FILENO);
+	while (line != NULL)
 	{
-		perror("open");
-		return (-1);
-	}
-	if (is_here_doc == 1)
-		here_doc(argv[2], input);
-	else
-	{
-		*input = open(argv[1], O_RDONLY, 0777);
-		if (*input == -1)
+		if (is_eof(line, eof))
 		{
-			close(*output);
-			perror("open");
-			return (-1);
+			free(line);
+			break;
 		}
+		write(fd[1], line, ft_strlen(line));
+		free(line);
+		line = get_next_line(STDIN_FILENO);
 	}
-	return (0);
+	close(fd[1]);
+	return (fd[0]);
 }

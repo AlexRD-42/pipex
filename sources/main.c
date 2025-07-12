@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 11:23:48 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/11 20:21:19 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/12 13:27:32 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,18 +37,17 @@ int	wait_child(pid_t *pid, size_t length)
 int	main(int argc, char **argv, char **envp)
 {
 	size_t		i;
-	int			input;
-	int			output;
+	int 		fd[2];
 	pid_t		cpid[1024];
-	const int	is_here_doc = pipex_init(argv, argc, &input, &output);
+	const int	is_here_doc = pipex_init(argv, argc, fd);
 
 	ft_memset(cpid, 0, sizeof(pid_t) * 1024);
 	if (is_here_doc == -1)
 		return (1);
 	i = 2 + (size_t) is_here_doc;
-	if (input >= 0)
-		dup2(input, STDIN_FILENO);
-	close(input);
+	if (fd[0] >= 0)
+		dup2(fd[0], STDIN_FILENO);
+	close(fd[0]);
 	while (i < (size_t)(argc - 2))
 	{
 		ft_pipe(argv[i], envp, cpid + i);
@@ -60,18 +59,18 @@ int	main(int argc, char **argv, char **envp)
 	if (last < 0)
 	{
 		perror("fork");
-		close(output);
+		close(fd[1]);
 		return (1);
 	}
 	if (last == 0)
 	{
-		dup2(output, STDOUT_FILENO);
-		close(output);
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
 		pipe_exec(argv[argc - 2], envp);
 	}
 	// Parent:
 	cpid[i++] = last;
-	close(output);
+	close(fd[1]);
 	// ---- ADD THIS LINE ----
 	close(STDIN_FILENO);
 	// now every reader is gone once the final child exits

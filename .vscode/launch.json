@@ -5,10 +5,10 @@
       "name": "Debug Executable (LLDB)",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceFolder}/build/pipex",
-      "cwd": "${workspaceFolder}/build",
+      "program": "${workspaceFolder}/pipex",
+      "cwd": "${workspaceFolder}",
 	  "console": "integratedTerminal",
-      "args": ["file1.txt", "sed s/e/3/g", "cat", "file2.txt"],
+      "args": ["build/infiles/basic.txt", "", "cat -e", "build/outfiles/outfile"],
       "env": { "LSAN_OPTIONS": "detect_leaks=0" },
       "stopOnEntry": false,
       "preLaunchTask": "build"

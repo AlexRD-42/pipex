@@ -1,0 +1,140 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   pipe.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/07/08 10:45:20 by adeimlin          #+#    #+#             */
+/*   Updated: 2025/07/12 13:21:55 by adeimlin         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <asm-generic/errno-base.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <fcntl.h>
+#include <stdio.h>
+#include "pipex.h"
+#include <errno.h>
+
+// State[0]: {in_file, 			fd_write_end(0)}
+// State[1]: {fd_read_end(0),	fd_write_end(1)}
+static
+int	ft_child(char *cmd, int fd_read, int fd_write, char **envp)
+{
+	int	dup2_error;
+
+	close(fd_read);
+	dup2_error = dup2(fd_write, STDOUT_FILENO);
+	close(fd_write);
+	if (dup2_error == -1)
+	{
+		perror("dup2");
+		exit(1);
+	}
+	pipe_exec(cmd, envp);
+	if (errno == ENOENT)
+		exit(127);
+	else
+		exit(126);
+}
+
+// State[0]: {fd_read_end(0), stdout}
+// State[1]: {fd_read_end(1), stdout}
+static
+int	ft_parent(int fd_read, int fd_write)
+{
+	int	dup2_error;
+
+	close(fd_write);
+	dup2_error = dup2(fd_read, STDIN_FILENO);
+	close(fd_read);
+	if (dup2_error == -1)
+		perror("dup2");
+	if (dup2_error == -1)
+		return (-1);
+	else
+		return (1);
+}
+
+// fd[0] read_end, fd[1] write_end
+static
+int	ft_pipe(char *cmd, char **envp, pid_t *cpid)
+{
+	int		fd_pipe[2];
+	pid_t	pid;
+
+	if (pipe(fd_pipe) == -1)
+	{
+		perror("pipe");
+		return (-1);
+	}
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("fork");
+		close(fd_pipe[0]);
+		close(fd_pipe[1]);
+		return (-1);
+	}
+	if (pid == 0)
+		return (ft_child(cmd, fd_pipe[0], fd_pipe[1], envp));
+	if (ft_parent(fd_pipe[0], fd_pipe[1]) == 1)
+	{
+		*cpid = pid;
+		return (1);
+	}
+	else
+		return (-1);
+}
+
+static
+int	wait_child(pid_t *pid, size_t length)
+{
+	int	status;
+
+	waitpid(pid[length], &status, 0);
+	while (length > 0)
+	{
+		length--;
+		if (pid[length] > 0)
+			waitpid(pid[length], 0, 0);
+	}
+	return ((status & 0xff00) >> 8);
+}
+
+int	ft_pipe_loop(size_t argc, char **argv, char **envp, int *fd)
+{
+	size_t	i;
+	pid_t	pid_list[1024];
+
+	ft_memset(pid_list, 0, 1024 * sizeof(pid_t));
+	if (fd[0] >= 0)
+		dup2(fd[0], STDIN_FILENO);
+	close(fd[0]);
+	i = 0;
+	while (i < argc - 2)
+	{
+		ft_pipe(argv[i], envp, pid_list + i);
+		i++;
+	}
+	pid_list[i] = fork();
+	if (pid_list[i] < 0)
+	{
+		perror("fork");
+		close(fd[1]);
+		return (1);
+	}
+	if (pid_list[i] == 0)
+	{
+		dup2(fd[1], STDOUT_FILENO);
+		close(fd[1]);
+		pipe_exec(argv[argc - 2], envp);
+	}
+	close(fd[1]);
+	close(STDIN_FILENO);
+	return (wait_child(pid_list, i));
+}

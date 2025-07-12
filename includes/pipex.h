@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 11:34:28 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/11 20:02:10 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/12 13:31:58 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,12 +23,15 @@
 # include <linux/limits.h>
 
 # ifndef FT_ARG_MAX
-#  define FT_ARG_MAX ARG_MAX
+#  if ARG_MAX > 131072
+#   define FT_ARG_MAX 131072
+#  else
+#   define FT_ARG_MAX ARG_MAX
+#  endif
 # endif
 
-# if FT_ARG_MAX > 131072
-#  undef FT_ARG_MAX
-#  define FT_ARG_MAX 131072
+# ifndef PAGE_SIZE
+#  define PAGE_SIZE 4096
 # endif
 
 void	*ft_memcpy(void *dst_void, const void *src_void, size_t length);
@@ -36,7 +39,9 @@ void	*ft_memset(void *dst_void, const uint8_t byte, size_t length);
 int32_t	ft_strcmp(const char *str1, const char *str2);
 char	*get_next_line(int fd);
 int		pipe_exec(char *cmd, char **envp);
+int		pipex_init(char **argv, int argc, int *fd);
+int		ft_pipe_loop(size_t argc, char **argv, char **envp, int *fd);
 int		ft_pipe(char *cmd, char **envp, pid_t *cpid);
-int		pipex_init(char **argv, int argc, int *input, int *output);
+size_t	ft_strlen(const char *str);
 
 #endif

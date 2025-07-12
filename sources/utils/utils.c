@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:27:06 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/11 19:53:01 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/12 10:58:36 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,4 +109,14 @@ int32_t	ft_strcmp(const char *str1, const char *str2)
 		str2++;
 	}
 	return (*(const uint8_t *) str1 - *(const uint8_t *) str2);
+}
+
+size_t	ft_strlen(const char *str)
+{
+	size_t	length;
+
+	length = 0;
+	while (str[length] != 0)
+		length++;
+	return (length);
 }

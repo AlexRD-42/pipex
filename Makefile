@@ -8,7 +8,7 @@ VPATH = sources sources/utils
 
 # Files --------------------------------------- #
 LIBS =
-SRCS = exec.c main.c pipe.c init.c utils.c get_next_line.c
+SRCS = exec.c main.c pipe.c here_doc.c utils.c get_next_line.c
 OBJS = $(addprefix $(OBJ_PATH)/, $(SRCS:.c=.o))
 
 # Flags --------------------------------------- #

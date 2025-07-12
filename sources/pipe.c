@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/08 10:45:20 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/12 14:25:56 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/12 16:01:44 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,11 +78,8 @@ int	ft_pipe(char *cmd, char **envp, pid_t *cpid)
 	}
 	if (pid == 0)
 		return (ft_child(cmd, fd[0], fd[1], envp));
-	else
-	{
-		*cpid = pid;
-		return (ft_parent(fd[0], fd[1]));
-	}
+	*cpid = pid;
+	return (ft_parent(fd[0], fd[1]));
 }
 
 static
@@ -106,8 +103,7 @@ int	ft_pipe_loop(size_t argc, char **argv, char **envp, int *fd)
 	pid_t	pid_list[1024];
 
 	ft_memset(pid_list, 0, 1024 * sizeof(pid_t));
-	if (fd[0] >= 0)
-		dup2(fd[0], STDIN_FILENO);
+	dup2(fd[0], STDIN_FILENO);
 	close(fd[0]);
 	i = 0;
 	while (i < argc - 2)
@@ -128,11 +124,3 @@ int	ft_pipe_loop(size_t argc, char **argv, char **envp, int *fd)
 	close(STDIN_FILENO);
 	return (wait_child(pid_list, i));
 }
-
-// if (pid_list[i] == 0)
-// {
-// 	dup2(fd[1], STDOUT_FILENO);
-// 	close(fd[1]);
-// 	pipe_exec(argv[argc - 2], envp);
-// 	exit(127);
-// }

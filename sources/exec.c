@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 11:23:48 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/12 11:04:37 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/12 15:44:12 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -109,12 +109,19 @@ int	exec_cmd(char *cmd, char **argv, char **envp, size_t cmd_length)
 // Uses 512kb of stack
 int	pipe_exec(char *cmd, char **envp)
 {
-	char			*argv[FT_ARG_MAX / 2];
-	size_t			i;
-	const size_t	cmd_length = in_place_split(cmd, argv) + 1;
-	int				error_code;
+	char	*argv[FT_ARG_MAX / 2];
+	size_t	i;
+	size_t	cmd_length;
+	int		error_code;
 
 	i = 0;
+	if (*cmd == 0)
+	{
+		argv[0] = cmd;
+		argv[1] = NULL;
+		return (exec_error(execve(cmd, argv, envp)));
+	}
+	cmd_length = in_place_split(cmd, argv) + 1;
 	while (cmd[i] != 0 && cmd[i] != '/')
 		i++;
 	if (cmd[i] == '/')

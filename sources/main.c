@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 11:23:48 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/12 13:27:32 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/12 14:35:41 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,60 +19,34 @@
 #include "pipex.h"
 #include <sys/wait.h>
 
-static
-int	wait_child(pid_t *pid, size_t length)
+void	pipex_init(char **argv, int argc, int *fd, uint8_t is_here_doc)
 {
-	int	status;
-
-	waitpid(pid[--length], &status, 0);
-	while (length > 0)
+	if (is_here_doc == 1)
+		fd[0] = here_doc(argv[2]);
+	else
+		fd[0] = open(argv[1], O_RDONLY, 0644);
+	if (is_here_doc)
+		fd[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
+	else
+		fd[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd[1] == -1)
 	{
-		length--;
-		if (pid[length] > 0)
-			waitpid(pid[length], 0, 0);
+		close(fd[0]);
+		perror("open");
 	}
-	return ((status & 0xff00) >> 8);
 }
 
 int	main(int argc, char **argv, char **envp)
 {
-	size_t		i;
-	int 		fd[2];
-	pid_t		cpid[1024];
-	const int	is_here_doc = pipex_init(argv, argc, fd);
+	int				fd[2];
+	const uint8_t	is_here_doc = ft_strcmp(argv[argc != 1], "here_doc") == 0;
+	const size_t	cmd_count = (size_t) (argc - 2 - is_here_doc);
 
-	ft_memset(cpid, 0, sizeof(pid_t) * 1024);
-	if (is_here_doc == -1)
-		return (1);
-	i = 2 + (size_t) is_here_doc;
-	if (fd[0] >= 0)
-		dup2(fd[0], STDIN_FILENO);
-	close(fd[0]);
-	while (i < (size_t)(argc - 2))
+	if (argc <= (4 + is_here_doc))
 	{
-		ft_pipe(argv[i], envp, cpid + i);
-		i++;
+		write(2, "Pipex: Incorrect argument count\n", 32);
+		return (-1);
 	}
-	pid_t last;
-
-	last = fork();
-	if (last < 0)
-	{
-		perror("fork");
-		close(fd[1]);
-		return (1);
-	}
-	if (last == 0)
-	{
-		dup2(fd[1], STDOUT_FILENO);
-		close(fd[1]);
-		pipe_exec(argv[argc - 2], envp);
-	}
-	// Parent:
-	cpid[i++] = last;
-	close(fd[1]);
-	// ---- ADD THIS LINE ----
-	close(STDIN_FILENO);
-	// now every reader is gone once the final child exits
-	return (wait_child(cpid, i));
+	pipex_init(argv, argc, fd, is_here_doc);
+	return (ft_pipe_loop(cmd_count, argv + 2 + is_here_doc, envp, fd));
 }

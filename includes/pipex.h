@@ -6,7 +6,7 @@
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/01 11:34:28 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/12 13:31:58 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/12 14:31:01 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,14 +34,16 @@
 #  define PAGE_SIZE 4096
 # endif
 
+# ifndef FD_MAX
+#  define FD_MAX 4096
+# endif
+
 void	*ft_memcpy(void *dst_void, const void *src_void, size_t length);
 void	*ft_memset(void *dst_void, const uint8_t byte, size_t length);
 int32_t	ft_strcmp(const char *str1, const char *str2);
 char	*get_next_line(int fd);
 int		pipe_exec(char *cmd, char **envp);
-int		pipex_init(char **argv, int argc, int *fd);
 int		ft_pipe_loop(size_t argc, char **argv, char **envp, int *fd);
-int		ft_pipe(char *cmd, char **envp, pid_t *cpid);
 size_t	ft_strlen(const char *str);
-
+int		here_doc(const char *eof);
 #endif

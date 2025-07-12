@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   init.c                                             :+:      :+:    :+:   */
+/*   here_doc.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: adeimlin <adeimlin@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/07/10 18:16:19 by adeimlin          #+#    #+#             */
-/*   Updated: 2025/07/12 12:29:56 by adeimlin         ###   ########.fr       */
+/*   Updated: 2025/07/12 14:35:38 by adeimlin         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,30 +53,4 @@ int	here_doc(const char *eof)
 	}
 	close(fd[1]);
 	return (fd[0]);
-}
-
-int	pipex_init(char **argv, int argc, int *fd)
-{
-	const uint8_t	is_here_doc = ft_strcmp(argv[argc != 1], "here_doc") == 0;
-
-	if (argc <= (4 + is_here_doc))
-	{
-		write(2, "Pipex: Incorrect argument count\n", 32);
-		return (-1);
-	}
-	if (is_here_doc == 1)
-		fd[0] = here_doc(argv[2]);
-	else
-		fd[0] = open(argv[1], O_RDONLY, 0644);
-	if (is_here_doc)
-		fd[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_APPEND, 0644);
-	else
-		fd[1] = open(argv[argc - 1], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-	if (fd[1] == -1)
-	{
-		close(fd[0]);
-		perror("open");
-		return (-1);
-	}
-	return (is_here_doc);
 }
